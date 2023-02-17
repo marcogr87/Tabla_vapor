@@ -5,17 +5,21 @@
 </head>
 <body>
   <h1>Tabla de vapor saturado</h1>
+<!-- boton para selecionar el archivo de datos -->
   <input type="file" id="file-input">
   <br>
+  <!-- Campo para ingresar la presión y el botón para buscar los datos -->
   <label for="pressure-input">Presión:</label>
   <input type="number" id="pressure-input" step="0.01">
   <button onclick="findData()">Buscar</button>
   <br>
+  <!-- Tabla donde se mostrarán los resultados -->
   <table id="data-table"></table>
 
   <script>
+    // Array donde se almacenarán los datos del archivo CSV
     let data = [];
-
+// Función que procesa los datos del archivo CSV y los almacena en el array "data"
     function processData(allText) {
       let allTextLines = allText.split(/\r\n|\n/);
       let headers = allTextLines[0].split(',');
@@ -28,7 +32,7 @@
         data.push(obj);
       }
     }
-
+ // Función que se llama cuando se selecciona un archivo de datos
     function handleFileSelect(event) {
       let file = event.target.files[0];
       let reader = new FileReader();
@@ -37,9 +41,9 @@
       };
       reader.readAsText(file);
     }
-
+ // Agregar un detector de eventos al botón de selección de archivo de datos
     document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
-
+  // Función que busca y muestra los datos correspondientes a la presión ingresada
     function findData() {
       let pressure = parseFloat(document.getElementById("pressure-input").value);
       let dataTable = document.getElementById("data-table");
@@ -47,6 +51,7 @@
       let found = false;
       for (let i = 0; i < data.length; i++) {
         if (data[i]["Presión (MPa)"] == pressure) {
+          // Mostrar los datos correspondientes a la presión exacta ingresada
           let row = dataTable.insertRow();
           for (let j = 0; j < Object.keys(data[i]).length; j++) {
             let cell = row.insertCell();
@@ -54,11 +59,14 @@
           }
           found = true;
         } else if (data[i]["Presión (MPa)"] > pressure) {
+          // Realizar una interpolación lineal de los datos para obtener los valores correspondientes a la presión ingresada
           if (i == 0) {
+            // Si la presión ingresada es menor que la presión más baja en la tabla, mostrar un mensaje de error
             let row = dataTable.insertRow();
             row.insertCell().innerHTML = "Presión fuera de rango";
             found = true;
           } else {
+            // Realizar la interpolación lineal para obtener los valores correspondientes a la presión ingresada
             let p1 = data[i-1]["Presión (MPa)"];
             let p2 = data[i]["Presión (MPa)"];
             let t1 = data[i-1]["Temperatura (°C)"];
