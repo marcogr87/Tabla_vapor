@@ -1,58 +1,62 @@
 <!DOCTYPE html>
 <html>
-  <style>
-		table {
-			border-collapse: collapse;
-			width: 100%;
-			margin-bottom: 20px;
-		}
-		th, td {
-			text-align: center;
-			padding: 8px;
-			border: 1px solid #ddd;
-		}
-		th {
-			background-color: #f2f2f2;
-		}
-	</style>
 <head>
   <title>Tabla de vapor saturado</title>
 </head>
 <body>
   <h1>Tabla de vapor saturado</h1>
-<!-- boton para selecionar el archivo de datos -->
   <input type="file" id="file-input">
   <br>
-  <!-- Campo para ingresar la presión y el botón para buscar los datos -->
   <label for="pressure-input">Presión:</label>
   <input type="number" id="pressure-input" step="0.01">
   <button onclick="findData()">Buscar</button>
   <br>
-  <!-- Tabla donde se mostrarán los resultados -->
-  <table id="data-table"></table>
-  <table id="valuesTable">
-		<thead>
-			<tr>
-				<th>Presión (MPa)</th>
-				<th>Temperatura (°C)</th>
-				<th>Energía Interna (kJ/kg)</th>
-				<th>Entalpía (kJ/kg)</th>
-				<th>Entropía (kJ/kg·K)</th>
-				<th>Volumen Específico (m^3/kg)</th>
-				<th>Calor Específico a Presión Constante (kJ/kg·K)</th>
-				<th>Calor Específico a Volumen Constante (kJ/kg·K)</th>
-				<th>Coeficiente de Compresibilidad Isentrópico</th>
-			</tr>
-		</thead>
-		<tbody id="valuesBody">
-		</tbody>
-	</table>
-
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="temp-row">
+        <td>Temperatura (°C)</td>
+        <td></td>
+      </tr>
+      <tr id="u-row">
+        <td>Energía Interna (kJ/kg)</td>
+        <td></td>
+      </tr>
+      <tr id="h-row">
+        <td>Entalpía (kJ/kg)</td>
+        <td></td>
+      </tr>
+      <tr id="s-row">
+        <td>Entropía (kJ/kg·K)</td>
+        <td></td>
+      </tr>
+      <tr id="v-row">
+        <td>Volumen Específico (m^3/kg)</td>
+        <td></td>
+      </tr>
+      <tr id="cp-row">
+        <td>Calor Específico a Presión Constante (kJ/kg·K)</td>
+        <td></td>
+      </tr>
+      <tr id="cv-row">
+        <td>Calor Específico a Volumen Constante (kJ/kg·K)</td>
+        <td></td>
+      </tr>
+      <tr id="z-row">
+        <td>Coeficiente de Compresibilidad</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 
   <script>
-    // Array donde se almacenarán los datos del archivo CSV
     let data = [];
-// Función que procesa los datos del archivo CSV y los almacena en el array "data"
+
     function processData(allText) {
       let allTextLines = allText.split(/\r\n|\n/);
       let headers = allTextLines[0].split(',');
@@ -65,7 +69,7 @@
         data.push(obj);
       }
     }
- // Función que se llama cuando se selecciona un archivo de datos
+
     function handleFileSelect(event) {
       let file = event.target.files[0];
       let reader = new FileReader();
@@ -74,32 +78,54 @@
       };
       reader.readAsText(file);
     }
- // Agregar un detector de eventos al botón de selección de archivo de datos
+
     document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
-  // Función que busca y muestra los datos correspondientes a la presión ingresada
+
     function findData() {
       let pressure = parseFloat(document.getElementById("pressure-input").value);
       let dataTable = document.getElementById("data-table");
-      dataTable.innerHTML = "";
+      let tempRow = document.getElementById("temp-row");
+      let uRow = document.getElementById("u-row");
+      let hRow = document.getElementById("h-row");
+      let sRow = document.getElementById("s-row");
+      let vRow = document.getElementById("v-row");
+      let cpRow = document.getElementById("cp-row");
+      let cvRow = document.getElementById("cv-row");
+      let zRow = document.getElementById("z-row");
+      dataTable.style.display = "none";
+      tempRow.style.display = "none";
+      uRow.style.display = "none";
+      hRow.style.display = "none";
+      sRow.style.display = "none";
+      vRow.style.display = "none";
+      cpRow.style.display = "none";
+      cvRow.style.display = "none";
+      zRow.style.display = "none";
       let found = false;
       for (let i = 0; i < data.length; i++) {
         if (data[i]["Presión (MPa)"] == pressure) {
-          // Mostrar los datos correspondientes a la presión exacta ingresada
-          let row = dataTable.insertRow();
-          for (let j = 0; j < Object.keys(data[i]).length; j++) {
-            let cell = row.insertCell();
-            cell.innerHTML = data[i][Object.keys(data[i])[j]];
-          }
+          tempRow.style.display = "table-row";
+          uRow.style.display = "table-row";
+          hRow.style.display = "table-row";
+          sRow.style.display = "table-row";
+          vRow.style.display = "table-row";
+          cpRow.style.display = "table-row";
+          cvRow.style.display = "table-row";
+          zRow.style.display = "table-row";
+          tempRow.cells[1].innerHTML = data[i]["Temperatura (°C)"].toFixed(2);
+          uRow.cells[1].innerHTML = data[i]["Energía Interna (kJ/kg)"].toFixed(2);
+          hRow.cells[1].innerHTML = data[i]["Entalpía (kJ/kg)"].toFixed(2);
+          sRow.cells[1].innerHTML = data[i]["Entropía (kJ/kg·K)"].toFixed(2);
+          vRow.cells[1].innerHTML = data[i]["Volumen Específico (m^3/kg)"].toFixed(6);
+          cpRow.cells[1].innerHTML = data[i]["Calor Específico a Presión Constante (kJ/kg·K)"].toFixed(2);
+          cvRow.cells[1].innerHTML = data[i]["Calor Específico a Volumen Constante (kJ/kg·K)"].toFixed(2);
+          zRow.cells[1].innerHTML = data[i]["Coeficiente de Compresibilidad"].toFixed(6);
           found = true;
         } else if (data[i]["Presión (MPa)"] > pressure) {
-          // Realizar una interpolación lineal de los datos para obtener los valores correspondientes a la presión ingresada
           if (i == 0) {
-            // Si la presión ingresada es menor que la presión más baja en la tabla, mostrar un mensaje de error
-            let row = dataTable.insertRow();
-            row.insertCell().innerHTML = "Presión fuera de rango";
+            alert("Presión fuera de rango");
             found = true;
           } else {
-            // Realizar la interpolación lineal para obtener los valores correspondientes a la presión ingresada
             let p1 = data[i-1]["Presión (MPa)"];
             let p2 = data[i]["Presión (MPa)"];
             let t1 = data[i-1]["Temperatura (°C)"];
@@ -126,27 +152,33 @@
             let cp = ((pressure - p1)/(p2 - p1)) * (cp2 - cp1) + cp1;
             let cv = ((pressure - p1)/(p2 - p1)) * (cv2 - cv1) + cv1;
             let z = ((pressure - p1)/(p2 - p1)) * (z2 - z1) + z1;
-            let row = dataTable.insertRow();
-            //row.insertCell().innerHTML = "Presión interpolada";
-            row.insertCell().innerHTML = t.toFixed(2);
-            row.insertCell().innerHTML = u.toFixed(2);
-            row.insertCell().innerHTML = h.toFixed(2);
-            row.insertCell().innerHTML = s.toFixed(2);
-            row.insertCell().innerHTML = v.toFixed(6);
-            row.insertCell().innerHTML = cp.toFixed(2);
-            row.insertCell().innerHTML = cv.toFixed(2);
-            row.insertCell().innerHTML = z.toFixed(6);
+            dataTable.style.display = "table";
+            tempRow.style.display = "table-row";
+            uRow.style.display = "table-row";
+            hRow.style.display = "table-row";
+            sRow.style.display = "table-row";
+            vRow.style.display = "table-row";
+            cpRow.style.display = "table-row";
+            cvRow.style.display = "table-row";
+            zRow.style.display = "table-row";
+            tempRow.cells[1].innerHTML = t.toFixed(2);
+            uRow.cells[1].innerHTML = u.toFixed(2);
+            hRow.cells[1].innerHTML = h.toFixed(2);
+            sRow.cells[1].innerHTML = s.toFixed(2);
+            vRow.cells[1].innerHTML = v.toFixed(6);
+            cpRow.cells[1].innerHTML = cp.toFixed(2);
+            cvRow.cells[1].innerHTML = cv.toFixed(2);
+            zRow.cells[1].innerHTML = z.toFixed(6);
             found = true;
-break;
-}
-}
-}
-if (!found) {
-let row = dataTable.insertRow();
-row.insertCell().innerHTML = "Presión fuera de rango";
-}
-}
-</script>
+            break;
+          }
+        }
+      }
+      if (!found) {
+        alert("Presión fuera de rango");
+      }
+    }
+  </script>
 
 </body>
 </html>
