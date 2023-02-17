@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tabla de vapor saturado</title>
+</head>
+<body>
+  <h1>Tabla de vapor saturado</h1>
+  <input type="file" id="file-input">
+  <br>
+  <label for="pressure-input">Presión:</label>
+  <input type="number" id="pressure-input" step="0.01">
+  <button onclick="findData()">Buscar</button>
+  <br>
+  <table id="data-table"></table>
+
+  <script>
+    let data = [];
+
+    function processData(allText) {
+      let allTextLines = allText.split(/\r\n|\n/);
+      let headers = allTextLines[0].split(',');
+      for (let i = 1; i < allTextLines.length; i++) {
+        let dataLine = allTextLines[i].split(',');
+        let obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          obj[headers[j]] = parseFloat(dataLine[j]);
+        }
+        data.push(obj);
+      }
+    }
+
+    function handleFileSelect(event) {
+      let file = event.target.files[0];
+      let reader = new FileReader();
+      reader.onload = function(event) {
+        processData(event.target.result);
+      };
+      reader.readAsText(file);
+    }
+
+    document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
+
+    function findData() {
+      let pressure = parseFloat(document.getElementById("pressure-input").value);
+      let dataTable = document.getElementById("data-table");
+      dataTable.innerHTML = "";
+      let found = false;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i]["Presión (MPa)"] == pressure) {
+          let row = dataTable.insertRow();
+          for (let j = 0; j < Object.keys(data[i]).length; j++) {
+            let cell = row.insertCell();
+            cell.innerHTML = data[i][Object.keys(data[i])[j]];
+          }
+          found = true;
+        } else if (data[i]["Presión (MPa)"] > pressure) {
+          if (i == 0) {
+            let row = dataTable.insertRow();
+            row.insertCell().innerHTML = "Presión fuera de rango";
+            found = true;
+          } else {
+            let p1 = data[i-1]["Presión (MPa)"];
+            let p2 = data[i]["Presión (MPa)"];
+            let t1 = data[i-1]["Temperatura (°C)"];
+            let t2 = data[i]["Temperatura (°C)"];
+            let u1 = data[i-1]["Energía Interna (kJ/kg)"];
+            let u2 = data[i]["Energía Interna (kJ/kg)"];
+            let h1 = data[i-1]["Entalpía (kJ/kg)"];
+            let h2 = data[i]["Entalpía (kJ/kg)"];
+            let s1 = data[i-1]["Entropía (kJ/kg·K)"];
+            let s2 = data[i]["Entropía (kJ/kg·K)"];
+            let v1 = data[i-1]["Volumen Específico (m^3/kg)"];
+            let v2 = data[i]["Volumen Específico (m^3/kg)"];
+            let cp1 = data[i-1]["Calor Específico a Presión Constante (kJ/kg·K)"];
+let cp2 = data[i]["Calor Específico a Presión Constante (kJ/kg·K)"];
+let cv1 = data[i-1]["Calor Específico a Volumen Constante (kJ/kg·K)"];
+let cv2 = data[i]["Calor Específico a Volumen Constante (kJ/kg·K)"];
+let z1 = data[i-1]["Coeficiente de Compresibilidad"];
+let z2 = data[i]["Coeficiente de Compresibilidad"];
+let t = ((pressure - p1)/(p2 - p1)) * (t2 - t1) + t1;
+let u = ((pressure - p1)/(p2 - p1)) * (u2 - u1) + u1;
+let h = ((pressure - p1)/(p2 - p1)) * (h2 - h1) + h1;
+let s = ((pressure - p1)/(p2 - p1)) * (s2 - s1) + s1;
+let v = ((pressure - p1)/(p2 - p1)) * (v2 - v1) + v1;
+let cp = ((pressure - p1)/(p2 - p1)) * (cp2 - cp1) + cp1;
+let cv = ((pressure - p1)/(p2 - p1)) * (cv2 - cv1) + cv1;
+let z = ((pressure - p1)/(p2 - p1)) * (z2 - z1) + z1;
+let row = dataTable.insertRow();
+row.insertCell().innerHTML = "Presión interpolada";
+row.insertCell().innerHTML = t.toFixed(2);
+row.insertCell().innerHTML = u.toFixed(2);
+row.insertCell().innerHTML = h.toFixed(2);
+row.insertCell().innerHTML = s.toFixed(2);
+row.insertCell().innerHTML = v.toFixed(6);
+row.insertCell().innerHTML = cp.toFixed(2);
+row.insertCell().innerHTML = cv.toFixed(2);
+row.insertCell().innerHTML = z.toFixed(6);
+found = true;
+break;
+}
+}
+}
+if (!found) {
+let row = dataTable.insertRow();
+row.insertCell().innerHTML = "Presión fuera de rango";
+}
+}
+</script>
+
+</body>
+</html>
