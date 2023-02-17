@@ -1,5 +1,20 @@
 <!DOCTYPE html>
 <html>
+  <style>
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			margin-bottom: 20px;
+		}
+		th, td {
+			text-align: center;
+			padding: 8px;
+			border: 1px solid #ddd;
+		}
+		th {
+			background-color: #f2f2f2;
+		}
+	</style>
 <head>
   <title>Tabla de vapor saturado</title>
 </head>
@@ -15,6 +30,24 @@
   <br>
   <!-- Tabla donde se mostrarán los resultados -->
   <table id="data-table"></table>
+  <table id="valuesTable">
+		<thead>
+			<tr>
+				<th>Presión (MPa)</th>
+				<th>Temperatura (°C)</th>
+				<th>Energía Interna (kJ/kg)</th>
+				<th>Entalpía (kJ/kg)</th>
+				<th>Entropía (kJ/kg·K)</th>
+				<th>Volumen Específico (m^3/kg)</th>
+				<th>Calor Específico a Presión Constante (kJ/kg·K)</th>
+				<th>Calor Específico a Volumen Constante (kJ/kg·K)</th>
+				<th>Coeficiente de Compresibilidad Isentrópico</th>
+			</tr>
+		</thead>
+		<tbody id="valuesBody">
+		</tbody>
+	</table>
+
 
   <script>
     // Array donde se almacenarán los datos del archivo CSV
@@ -80,30 +113,30 @@
             let v1 = data[i-1]["Volumen Específico (m^3/kg)"];
             let v2 = data[i]["Volumen Específico (m^3/kg)"];
             let cp1 = data[i-1]["Calor Específico a Presión Constante (kJ/kg·K)"];
-let cp2 = data[i]["Calor Específico a Presión Constante (kJ/kg·K)"];
-let cv1 = data[i-1]["Calor Específico a Volumen Constante (kJ/kg·K)"];
-let cv2 = data[i]["Calor Específico a Volumen Constante (kJ/kg·K)"];
-let z1 = data[i-1]["Coeficiente de Compresibilidad"];
-let z2 = data[i]["Coeficiente de Compresibilidad"];
-let t = ((pressure - p1)/(p2 - p1)) * (t2 - t1) + t1;
-let u = ((pressure - p1)/(p2 - p1)) * (u2 - u1) + u1;
-let h = ((pressure - p1)/(p2 - p1)) * (h2 - h1) + h1;
-let s = ((pressure - p1)/(p2 - p1)) * (s2 - s1) + s1;
-let v = ((pressure - p1)/(p2 - p1)) * (v2 - v1) + v1;
-let cp = ((pressure - p1)/(p2 - p1)) * (cp2 - cp1) + cp1;
-let cv = ((pressure - p1)/(p2 - p1)) * (cv2 - cv1) + cv1;
-let z = ((pressure - p1)/(p2 - p1)) * (z2 - z1) + z1;
-let row = dataTable.insertRow();
-row.insertCell().innerHTML = "Presión interpolada";
-row.insertCell().innerHTML = t.toFixed(2);
-row.insertCell().innerHTML = u.toFixed(2);
-row.insertCell().innerHTML = h.toFixed(2);
-row.insertCell().innerHTML = s.toFixed(2);
-row.insertCell().innerHTML = v.toFixed(6);
-row.insertCell().innerHTML = cp.toFixed(2);
-row.insertCell().innerHTML = cv.toFixed(2);
-row.insertCell().innerHTML = z.toFixed(6);
-found = true;
+            let cp2 = data[i]["Calor Específico a Presión Constante (kJ/kg·K)"];
+            let cv1 = data[i-1]["Calor Específico a Volumen Constante (kJ/kg·K)"];
+            let cv2 = data[i]["Calor Específico a Volumen Constante (kJ/kg·K)"];
+            let z1 = data[i-1]["Coeficiente de Compresibilidad"];
+            let z2 = data[i]["Coeficiente de Compresibilidad"];
+            let t = ((pressure - p1)/(p2 - p1)) * (t2 - t1) + t1;
+            let u = ((pressure - p1)/(p2 - p1)) * (u2 - u1) + u1;
+            let h = ((pressure - p1)/(p2 - p1)) * (h2 - h1) + h1;
+            let s = ((pressure - p1)/(p2 - p1)) * (s2 - s1) + s1;
+            let v = ((pressure - p1)/(p2 - p1)) * (v2 - v1) + v1;
+            let cp = ((pressure - p1)/(p2 - p1)) * (cp2 - cp1) + cp1;
+            let cv = ((pressure - p1)/(p2 - p1)) * (cv2 - cv1) + cv1;
+            let z = ((pressure - p1)/(p2 - p1)) * (z2 - z1) + z1;
+            let row = dataTable.insertRow();
+            //row.insertCell().innerHTML = "Presión interpolada";
+            row.insertCell().innerHTML = t.toFixed(2);
+            row.insertCell().innerHTML = u.toFixed(2);
+            row.insertCell().innerHTML = h.toFixed(2);
+            row.insertCell().innerHTML = s.toFixed(2);
+            row.insertCell().innerHTML = v.toFixed(6);
+            row.insertCell().innerHTML = cp.toFixed(2);
+            row.insertCell().innerHTML = cv.toFixed(2);
+            row.insertCell().innerHTML = z.toFixed(6);
+            found = true;
 break;
 }
 }
