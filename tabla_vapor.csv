@@ -1,6 +1,6 @@
-Presión (MPa),Temperatura (°C),Calor Latente (kJ/kg),Entalpía Especifica del Vapor Saturado (kJ/kg),Entalpía Específica del Agua Saturada  (kJ/kg),Volumen Específico del Vapor Saturado (m^3/kg),Volumen Específico del Agua Saturado (m^3/kg), entropia (kJ/kg·K),Entropia
-0.1,99.6059,2257.51,2674.95,417.436,1.69402,0.00104315,1.4,0.0021
-0.2,120.212,2201.56,2706.24,504.684,0.885735,0.00106052,1.5,0.0022
+Presión (MPa),Temperatura (°C),Energía Interna (kJ/kg),Entalpía (kJ/kg),Entropía (kJ/kg·K),Volumen Específico (m^3/kg),Calor Específico a Presión Constante (kJ/kg·K),Calor Específico a Volumen Constante (kJ/kg·K),Coeficiente de Compresibilidad
+0.1,99.6,2257.51,2674.9,417.4,1.69,0.0010,1.4,0.0021
+0.2,120.212,2201.56,2706.24,504.684,0.8857,0.00106,1.5,0.0022
 0.3,120,2790,3080,9.34,1.3,1.7,1.6,0.0023
 0.4,130,2910,3220,9.52,1.4,1.6,1.7,0.0024
 0.5,140,3030,3360,9.71,1.5,1.5,1.8,0.0025
